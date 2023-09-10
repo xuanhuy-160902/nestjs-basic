@@ -38,8 +38,11 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    console.log(id);
+    if (!isValidObjectId(id)) return `user not found`;
+    const result = await this.userModel.updateOne({ _id: id }, updateUserDto);
+    return result;
   }
 
   remove(id: number) {
