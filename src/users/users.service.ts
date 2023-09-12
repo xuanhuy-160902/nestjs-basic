@@ -39,13 +39,15 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    console.log(id);
     if (!isValidObjectId(id)) return `user not found`;
     const result = await this.userModel.updateOne({ _id: id }, updateUserDto);
     return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    if (!isValidObjectId(id)) return `user not found`;
+    return this.userModel.deleteOne({
+      _id: id,
+    });
   }
 }
