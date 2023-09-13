@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { genSaltSync, hashSync } from 'bcryptjs';
+import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { Model, isValidObjectId } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -21,6 +21,10 @@ export class UsersService {
     return hash;
   }
 
+  checkUserPassword(password: string, pwHash: string) {
+    return compareSync(password, pwHash);
+  }
+
   async create(createUserDto: CreateUserDto) {
     createUserDto.password = this.getPasswordHash(createUserDto.password);
     const user = await this.userModel.create(createUserDto);
@@ -31,10 +35,16 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     if (!isValidObjectId(id)) return `user not found`;
-    return this.userModel.findOne({
+    return await this.userModel.findOne({
       _id: id,
+    });
+  }
+
+  async findOneByUsername(username: string) {
+    return await this.userModel.findOne({
+      email: username,
     });
   }
 
@@ -44,9 +54,9 @@ export class UsersService {
     return result;
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     if (!isValidObjectId(id)) return `user not found`;
-    return this.userModel.deleteOne({
+    return await this.userModel.deleteOne({
       _id: id,
     });
   }
