@@ -9,8 +9,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
+import { Public } from './decorators/public.decorator';
 
 @Controller()
 export class AppController {
@@ -20,6 +20,7 @@ export class AppController {
     private readonly authService: AuthService,
   ) {}
 
+  @Public()
   @Get()
   @Render('home')
   getHello() {
@@ -28,13 +29,13 @@ export class AppController {
     return { message, port };
   }
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   handleLogin(@Request() req) {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
