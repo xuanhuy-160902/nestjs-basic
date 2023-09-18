@@ -23,11 +23,17 @@ export class User {
   @Prop()
   address: string;
 
-  @Prop()
-  createdAt: Date;
+  // @Prop()
+  // createdAt: Date;
 
-  @Prop()
-  updatedAt: Date;
+  // @Prop()
+  // updatedAt: Date;
+
+  // @Prop()
+  // isDeleted: boolean;
+
+  // @Prop()
+  // deletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
