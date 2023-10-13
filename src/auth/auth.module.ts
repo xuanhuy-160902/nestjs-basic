@@ -30,6 +30,5 @@ import { LocalStrategy } from './passport/local.strategy';
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, mongo } from 'mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { IUser } from 'src/users/user.interface';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company, CompanyDocument } from './schemas/company.schema';
@@ -13,8 +14,14 @@ export class CompaniesService {
     private readonly companyModel: SoftDeleteModel<CompanyDocument>,
   ) {}
 
-  create(createCompanyDto: CreateCompanyDto) {
-    return this.companyModel.create(createCompanyDto);
+  create(createCompanyDto: CreateCompanyDto, user: IUser) {
+    return this.companyModel.create({
+      ...createCompanyDto,
+      createdBy: {
+        _id: new mongo.ObjectId(user._id),
+        email: user.email,
+      },
+    });
   }
 
   findAll() {
