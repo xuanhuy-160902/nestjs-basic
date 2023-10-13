@@ -33,9 +33,18 @@ export class CompaniesService {
     return this.companyModel.findOne({ _id: id });
   }
 
-  update(id: string, updateCompanyDto: UpdateCompanyDto) {
+  update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
     if (!isValidObjectId(id)) return `company not found`;
-    return this.companyModel.updateOne({ _id: id }, updateCompanyDto);
+    return this.companyModel.updateOne(
+      { _id: id },
+      {
+        ...updateCompanyDto,
+        updatedBy: {
+          _id: new mongo.ObjectId(user._id),
+          email: user.email,
+        },
+      },
+    );
   }
 
   remove(id: string) {
