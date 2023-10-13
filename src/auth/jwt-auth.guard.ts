@@ -33,7 +33,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     status?: any,
   ): TUser {
     if (err || !user) {
-      throw err || new UnauthorizedException('Token không hợp lệ!');
+      throw (
+        err ||
+        new UnauthorizedException(
+          'Token không hợp lệ hoặc không có token ở Bearer Token ở Header của Request!',
+        )
+      );
     }
     return user;
   }
