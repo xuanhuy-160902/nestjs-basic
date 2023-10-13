@@ -47,8 +47,17 @@ export class CompaniesService {
     );
   }
 
-  remove(id: string) {
+  async remove(id: string, user: IUser) {
     if (!isValidObjectId(id)) return `company not found`;
+    await this.companyModel.updateOne(
+      { _id: id },
+      {
+        deletedBy: {
+          _id: new mongo.ObjectId(user._id),
+          emai: user.email,
+        },
+      },
+    );
     return this.companyModel.softDelete({ _id: id });
   }
 }
